@@ -35,7 +35,7 @@ namespace MAXIT
                 {
                     if (board[x, y].selected)
                     {
-
+                        Console.BackgroundColor = ConsoleColor.DarkBlue;
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.Write("{0}", board[x, y].Value);
                         Console.ResetColor();
@@ -71,8 +71,6 @@ namespace MAXIT
             }
         }
 
-
-
         void PopulateBoard(BoardNumber[,] board)
         {
             for (int x = 0; x < board.GetLength(0); x += 1)
@@ -84,17 +82,34 @@ namespace MAXIT
             }
         }
 
-        /// <summary>
-        /// Moves the current selected node in the specified direction and distance.
-        /// </summary>
-        /// <param name="direction">Amount of nodes to move. Can be positive or negative.</param>
-        /// <param name="distance">Character representation of x or y plane to move in.</param>
-        /// <returns>True if move was legal, false otherwise.</returns>
-        bool NextLocation(string direction, int distance)
+        BoardNumber FindLargestAvailable(BoardNumber[,] board)
         {
+            BoardNumber LargestNodeAvailable = board[selectedNode.X, 0];
 
+            for (int i = 0; i < BoardDimension; i++)
+            {
+                BoardNumber temp = board[selectedNode.X, i];
+                if (!temp.selected && !temp.consumed && temp.Value > LargestNodeAvailable.Value)
+                {
+                    LargestNodeAvailable = temp;
+                }
+
+                temp = board[i, selectedNode.Y];
+                if (!temp.selected && !temp.consumed && temp.Value > LargestNodeAvailable.Value)
+                {
+                    LargestNodeAvailable = temp;
+                }
+            }
+
+            if (!LargestNodeAvailable.consumed && !LargestNodeAvailable.selected)
+            {
+                return LargestNodeAvailable;
+            }
+            else
+            {
+                return null;
+            }
         }
-
 
         public void Run()
         {
@@ -116,11 +131,20 @@ namespace MAXIT
             selectedNode.selected = true;
 
             bool next = false;
+
             while (true)
             {
                 if (next)
                 {
-                    //Computer Player's turn
+                    Console.WriteLine("Computer Player's turn...");
+                    BoardNumber nextMove = FindLargestAvailable(board);
+                    if (nextMove != null)
+                    {
+                        selectedNode.selected = false;
+                        selectedNode = nextMove;
+                        selectedNode.selected = true;
+                        selectedNode.consumed = true;
+                    }
                 }
 
 
@@ -178,27 +202,29 @@ namespace MAXIT
                 {
                     temp = board[selectedNode.X, selectedNode.Y + distance];
                 }
-                if (temp.consumed == true || temp.selected == true)
+                if (temp.selected == true)
                 {
-                    return false;
+                    Console.WriteLine("\nThis node is already selected.");
+                    next = false;
+                    Thread.Sleep(1500);
+                    continue;
                 }
+                else if (temp.consumed == true)
+                {
+                    Console.WriteLine("\nThis node is already consumed.");
+                    next = false;
+                    Thread.Sleep(1500);
+                    continue;
+                }
+                
+
                 selectedNode.selected = false;
                 selectedNode = temp;
                 selectedNode.selected = true;
-                return true;
-
-                ////////
-
-                if (!NextLocation(direction, distance))
-                {
-                    Console.WriteLine("Cannot move to selected node. Try again.");
-                    Thread.Sleep(750);
-                    continue;
-                }
-
                 selectedNode.consumed = true;
 
-
+                next = true;
+                
                 Console.ReadKey();
             }
         }
