@@ -1,0 +1,6 @@
+C:\Users\Isaac\ownCloud\422\Projects\MAXIT\MAXIT\bin\Debug\MAXIT.exe.config
+C:\Users\Isaac\ownCloud\422\Projects\MAXIT\MAXIT\obj\Debug\MAXIT.csprojResolveAssemblyReference.cache
+C:\Users\Isaac\ownCloud\422\Projects\MAXIT\MAXIT\bin\Debug\MAXIT.exe
+C:\Users\Isaac\ownCloud\422\Projects\MAXIT\MAXIT\bin\Debug\MAXIT.pdb
+C:\Users\Isaac\ownCloud\422\Projects\MAXIT\MAXIT\obj\Debug\MAXIT.exe
+C:\Users\Isaac\ownCloud\422\Projects\MAXIT\MAXIT\obj\Debug\MAXIT.pdb
