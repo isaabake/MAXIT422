@@ -12,6 +12,8 @@ namespace MAXIT
         BoardNumber[,] board;
         BoardNumber selectedNode;
         int BoardDimension;
+        int PlayerScore = 0;
+        int ComputerScore = 0;
 
         void PrintBoard(BoardNumber[,] board)
         {
@@ -81,7 +83,8 @@ namespace MAXIT
                 }
             }
         }
-
+        
+        //bug here
         BoardNumber FindLargestAvailable(BoardNumber[,] board)
         {
             BoardNumber LargestNodeAvailable = board[selectedNode.X, 0];
@@ -111,6 +114,19 @@ namespace MAXIT
             }
         }
 
+        bool isGameOver(BoardNumber[,] board)
+        {
+            bool tf = true;
+            for (int i = 0; i < BoardDimension; i++)
+            {
+                if (!board[selectedNode.X, i].consumed || !board[i ,selectedNode.Y].consumed)
+                {
+                    tf = false;
+                }
+            }
+            return tf;
+        }
+
         public void Run()
         {
             char cDim = '\0';
@@ -134,24 +150,10 @@ namespace MAXIT
 
             while (true)
             {
-                if (next)
-                {
-                    Console.WriteLine("Computer Player's turn...");
-                    BoardNumber nextMove = FindLargestAvailable(board);
-                    if (nextMove != null)
-                    {
-                        selectedNode.selected = false;
-                        selectedNode = nextMove;
-                        selectedNode.selected = true;
-                        selectedNode.consumed = true;
-                    }
-                }
-
-
                 Console.Clear();
 
                 PrintBoard(board);
-                Console.WriteLine();
+                Console.WriteLine("Player: {0}    Computer: {1}\n", PlayerScore, ComputerScore);
 
                 Console.Write("Traverse X or Y? ");
                 string direction = string.Empty;
@@ -160,7 +162,6 @@ namespace MAXIT
                 if(direction != "x" && direction != "y")
                 {
                     Console.WriteLine("\nPlease enter X or Y.");
-                    next = false;
                     Thread.Sleep(1500);
                     continue;
                 }
@@ -172,21 +173,18 @@ namespace MAXIT
                 if (!int.TryParse(distanceString, out distance))
                 {
                     Console.WriteLine("\nPlease enter a valid number.");
-                    next = false;
                     Thread.Sleep(1500);
                     continue;
                 }
                 else if(direction == "x" && (selectedNode.X + distance > BoardDimension - 1 || selectedNode.X + distance < 0))
                 {
                     Console.WriteLine("\nDistance out of bounds.");
-                    next = false;
                     Thread.Sleep(1500);
                     continue;
                 }
                 else if (direction == "y" && (selectedNode.Y + distance > BoardDimension - 1 || selectedNode.Y + distance < 0))
                 {
                     Console.WriteLine("\nDistance out of bounds.");
-                    next = false;
                     Thread.Sleep(1500);
                     continue;
                 }
@@ -205,14 +203,12 @@ namespace MAXIT
                 if (temp.selected == true)
                 {
                     Console.WriteLine("\nThis node is already selected.");
-                    next = false;
                     Thread.Sleep(1500);
                     continue;
                 }
                 else if (temp.consumed == true)
                 {
                     Console.WriteLine("\nThis node is already consumed.");
-                    next = false;
                     Thread.Sleep(1500);
                     continue;
                 }
@@ -222,17 +218,41 @@ namespace MAXIT
                 selectedNode = temp;
                 selectedNode.selected = true;
                 selectedNode.consumed = true;
-
-                next = true;
+                PlayerScore += selectedNode.Value;
                 
-                Console.ReadKey();
+                BoardNumber nextMove = FindLargestAvailable(board);
+                if (nextMove != null)
+                {
+                    Console.WriteLine("Computer Player's turn...");
+                    selectedNode.selected = false;
+                    selectedNode = nextMove;
+                    selectedNode.selected = true;
+                    selectedNode.consumed = true;
+                    ComputerScore += selectedNode.Value;
+                }
+
+                if (isGameOver(board))
+                {
+                    Console.WriteLine("****GAME OVER****");
+                    if (ComputerScore > PlayerScore)
+                    {
+                        Console.WriteLine("Computer player wins with {0} points!", ComputerScore);
+                        break;
+                    }
+
+                    else if (PlayerScore > ComputerScore)
+                    {
+                        Console.WriteLine("You with {0} points!", PlayerScore);
+                        break;
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Tie game at {0} points!", PlayerScore);
+                        break;
+                    }
+                }
             }
         }
-
-        public MAXIT()
-        {
-        }
-
-
     }
 }
