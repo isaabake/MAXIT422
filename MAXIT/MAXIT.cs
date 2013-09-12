@@ -10,8 +10,8 @@ namespace MAXIT
     public class MAXIT
     {
         BoardNumber[,] board;
-        BoardNumber selectedNode;
-        int BoardDimension;
+        public BoardNumber selectedNode;
+        public int BoardDimension;
         int PlayerScore = 0;
         int ComputerScore = 0;
 
@@ -84,7 +84,6 @@ namespace MAXIT
             }
         }
 
-        //bug here
         public BoardNumber FindLargestAvailable(BoardNumber[,] board)
         {
             BoardNumber LargestNodeAvailable = board[selectedNode.X, 0];
@@ -95,11 +94,13 @@ namespace MAXIT
                 if (!temp.selected && !temp.consumed && (temp.Value > LargestNodeAvailable.Value || LargestNodeAvailable.consumed))
                 {
                     LargestNodeAvailable = temp;
+                    Console.WriteLine("setting largestnodeavail in if1 to: [{0}, {1}] = {2}", temp.X, temp.Y, temp.Value);
                 }
 
                 temp = board[i, selectedNode.Y];
                 if (!temp.selected && !temp.consumed && (temp.Value > LargestNodeAvailable.Value || LargestNodeAvailable.consumed))
                 {
+                    Console.WriteLine("setting largestnodeavail in if2 to: [{0}, {1}] = {2}", temp.X, temp.Y, temp.Value);
                     LargestNodeAvailable = temp;
                 }
             }
@@ -119,7 +120,7 @@ namespace MAXIT
             bool tf = true;
             for (int i = 0; i < BoardDimension; i++)
             {
-                if (!board[selectedNode.X, i].consumed || !board[i, selectedNode.Y].consumed)
+                if ((!board[selectedNode.X, i].selected || !board[i, selectedNode.Y].selected) && (!board[selectedNode.X, i].consumed || !board[i, selectedNode.Y].consumed))
                 {
                     tf = false;
                 }

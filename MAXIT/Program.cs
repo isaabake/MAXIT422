@@ -10,6 +10,8 @@ namespace MAXIT
     {
         static void Main(string[] args)
         {
+            test t = new test();
+
             MAXIT maxit = new MAXIT();
             maxit.Run();
 
