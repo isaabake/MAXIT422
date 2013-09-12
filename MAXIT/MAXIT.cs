@@ -83,7 +83,7 @@ namespace MAXIT
                 }
             }
         }
-        
+
         //bug here
         BoardNumber FindLargestAvailable(BoardNumber[,] board)
         {
@@ -119,7 +119,7 @@ namespace MAXIT
             bool tf = true;
             for (int i = 0; i < BoardDimension; i++)
             {
-                if (!board[selectedNode.X, i].consumed || !board[i ,selectedNode.Y].consumed)
+                if (!board[selectedNode.X, i].consumed || !board[i, selectedNode.Y].consumed)
                 {
                     tf = false;
                 }
@@ -146,9 +146,7 @@ namespace MAXIT
             selectedNode = board[randomNumber.Next(0, BoardDimension - 1), randomNumber.Next(0, BoardDimension - 1)];
             selectedNode.selected = true;
 
-            bool next = false;
-
-            while (true)
+            while (!isGameOver(board))
             {
                 Console.Clear();
 
@@ -159,7 +157,7 @@ namespace MAXIT
                 string direction = string.Empty;
                 direction = Console.ReadLine();
                 direction = direction.ToLower();
-                if(direction != "x" && direction != "y")
+                if (direction != "x" && direction != "y")
                 {
                     Console.WriteLine("\nPlease enter X or Y.");
                     Thread.Sleep(1500);
@@ -176,7 +174,7 @@ namespace MAXIT
                     Thread.Sleep(1500);
                     continue;
                 }
-                else if(direction == "x" && (selectedNode.X + distance > BoardDimension - 1 || selectedNode.X + distance < 0))
+                else if (direction == "x" && (selectedNode.X + distance > BoardDimension - 1 || selectedNode.X + distance < 0))
                 {
                     Console.WriteLine("\nDistance out of bounds.");
                     Thread.Sleep(1500);
@@ -212,14 +210,14 @@ namespace MAXIT
                     Thread.Sleep(1500);
                     continue;
                 }
-                
+
 
                 selectedNode.selected = false;
                 selectedNode = temp;
                 selectedNode.selected = true;
                 selectedNode.consumed = true;
                 PlayerScore += selectedNode.Value;
-                
+
                 BoardNumber nextMove = FindLargestAvailable(board);
                 if (nextMove != null)
                 {
@@ -230,28 +228,22 @@ namespace MAXIT
                     selectedNode.consumed = true;
                     ComputerScore += selectedNode.Value;
                 }
+            }
 
-                if (isGameOver(board))
-                {
-                    Console.WriteLine("****GAME OVER****");
-                    if (ComputerScore > PlayerScore)
-                    {
-                        Console.WriteLine("Computer player wins with {0} points!", ComputerScore);
-                        break;
-                    }
+            Console.WriteLine("****GAME OVER****");
+            if (ComputerScore > PlayerScore)
+            {
+                Console.WriteLine("Computer player wins with {0} points!", ComputerScore);
+            }
 
-                    else if (PlayerScore > ComputerScore)
-                    {
-                        Console.WriteLine("You with {0} points!", PlayerScore);
-                        break;
-                    }
+            else if (PlayerScore > ComputerScore)
+            {
+                Console.WriteLine("You with {0} points!", PlayerScore);
+            }
 
-                    else
-                    {
-                        Console.WriteLine("Tie game at {0} points!", PlayerScore);
-                        break;
-                    }
-                }
+            else
+            {
+                Console.WriteLine("Tie game at {0} points!", PlayerScore);
             }
         }
     }
