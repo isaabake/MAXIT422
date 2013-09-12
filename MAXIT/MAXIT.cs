@@ -15,7 +15,7 @@ namespace MAXIT
         int PlayerScore = 0;
         int ComputerScore = 0;
 
-        void PrintBoard(BoardNumber[,] board)
+        public void PrintBoard(BoardNumber[,] board)
         {
             int dimX = board.GetLength(0);
             int dimY = board.GetLength(1);
@@ -73,7 +73,7 @@ namespace MAXIT
             }
         }
 
-        void PopulateBoard(BoardNumber[,] board)
+        public void PopulateBoard(BoardNumber[,] board)
         {
             for (int x = 0; x < board.GetLength(0); x += 1)
             {
@@ -85,20 +85,20 @@ namespace MAXIT
         }
 
         //bug here
-        BoardNumber FindLargestAvailable(BoardNumber[,] board)
+        public BoardNumber FindLargestAvailable(BoardNumber[,] board)
         {
             BoardNumber LargestNodeAvailable = board[selectedNode.X, 0];
 
             for (int i = 0; i < BoardDimension; i++)
             {
                 BoardNumber temp = board[selectedNode.X, i];
-                if (!temp.selected && !temp.consumed && temp.Value > LargestNodeAvailable.Value)
+                if (!temp.selected && !temp.consumed && (temp.Value > LargestNodeAvailable.Value || LargestNodeAvailable.consumed))
                 {
                     LargestNodeAvailable = temp;
                 }
 
                 temp = board[i, selectedNode.Y];
-                if (!temp.selected && !temp.consumed && temp.Value > LargestNodeAvailable.Value)
+                if (!temp.selected && !temp.consumed && (temp.Value > LargestNodeAvailable.Value || LargestNodeAvailable.consumed))
                 {
                     LargestNodeAvailable = temp;
                 }
@@ -114,7 +114,7 @@ namespace MAXIT
             }
         }
 
-        bool isGameOver(BoardNumber[,] board)
+        public bool isGameOver(BoardNumber[,] board)
         {
             bool tf = true;
             for (int i = 0; i < BoardDimension; i++)
@@ -198,6 +198,7 @@ namespace MAXIT
                 {
                     temp = board[selectedNode.X, selectedNode.Y + distance];
                 }
+
                 if (temp.selected == true)
                 {
                     Console.WriteLine("\nThis node is already selected.");
