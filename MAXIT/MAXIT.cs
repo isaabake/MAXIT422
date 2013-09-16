@@ -130,16 +130,16 @@ namespace MAXIT
 
         public void Run()
         {
-            char cDim = '\0';
+            string cDim = string.Empty;
 
             Random randomNumber = new Random();
 
             Console.WriteLine("Welcome to MAXIT\n");
             Console.Write("Please enter board dimension: ");
 
-            while (!int.TryParse(cDim.ToString(), out BoardDimension))
+            while (!int.TryParse(cDim, out BoardDimension))
             {
-                cDim = Console.ReadKey().KeyChar;
+                cDim = Console.ReadLine();
             }
             board = new BoardNumber[BoardDimension, BoardDimension];
             PopulateBoard(board);
@@ -247,6 +247,9 @@ namespace MAXIT
             {
                 Console.WriteLine("Tie game at {0} points!", PlayerScore);
             }
+
+            Console.Write("\n\nPress any key to continue...");
+            Console.ReadKey();
         }
     }
 }
